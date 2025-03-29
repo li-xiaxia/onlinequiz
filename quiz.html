@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Python知识测试</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        body {
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: #f5f5f5;
+            padding: 20px;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        h1 {
+            text-align: center;
+            margin-bottom: 30px;
+            color: #2c3e50;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #3498db;
+        }
+        .question {
+            background-color: white;
+            padding: 20px;
+            margin-bottom: 25px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        .question p {
+            font-weight: bold;
+            margin-bottom: 15px;
+            font-size: 18px;
+        }
+        .options {
+            margin-left: 10px;
+        }
+        label {
+            display: block;
+            padding: 8px 0;
+            cursor: pointer;
+        }
+        input[type="radio"],
+        input[type="checkbox"] {
+            margin-right: 10px;
+        }
+        input[type="submit"] {
+            display: block;
+            width: 100%;
+            padding: 15px;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 18px;
+            cursor: pointer;
+            margin-top: 20px;
+            transition: background-color 0.3s;
+        }
+        input[type="submit"]:hover {
+            background-color: #2980b9;
+        }
+        .points {
+            float: right;
+            color: #3498db;
+            font-weight: normal;
+        }
+        @media (max-width: 600px) {
+            body {
+                padding: 15px;
+            }
+            .question {
+                padding: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <h1>Python知识测试</h1>
+    <form id="quizForm">
+        <!-- 单选题1 -->
+        <div class="question">
+            <p>单选题1：Python是以下哪种类型的语言？<span class="points">(20分)</span></p>
+            <div class="options">
+                <label><input type="radio" name="q1answer" value="A"> A. 编译型语言</label>
+                <label><input type="radio" name="q1answer" value="B"> B. 解释型语言</label>
+                <label><input type="radio" name="q1answer" value="C"> C. 汇编语言</label>
+                <label><input type="radio" name="q1answer" value="D"> D. 机器语言</label>
+            </div>
+        </div>
+
+        <!-- 单选题2 -->
+        <div class="question">
+            <p>单选题2：以下哪个不是Python的内置函数？<span class="points">(20分)</span></p>
+            <div class="options">
+                <label><input type="radio" name="q2answer" value="A"> A. print</label>
+                <label><input type="radio" name="q2answer" value="B"> B. add</label>
+                <label><input type="radio" name="q2answer" value="C"> C. len</label>
+                <label><input type="radio" name="q2answer" value="D"> D. type</label>
+            </div>
+        </div>
+
+        <!-- 多选题1 -->
+        <div class="question">
+            <p>多选题1：以下哪些是Python的数据类型？<span class="points">(30分)</span></p>
+            <div class="options">
+                <label><input type="checkbox" name="q3answer" value="A"> A. 整数</label>
+                <label><input type="checkbox" name="q3answer" value="B"> B. 字符</label>
+                <label><input type="checkbox" name="q3answer" value="C"> C. 列表</label>
+                <label><input type="checkbox" name="q3answer" value="D"> D. 布尔值</label>
+            </div>
+        </div>
+
+        <!-- 多选题2 -->
+        <div class="question">
+            <p>多选题2：Python中用于控制流的关键字有？<span class="points">(30分)</span></p>
+            <div class="options">
+                <label><input type="checkbox" name="q4answer" value="A"> A. for</label>
+                <label><input type="checkbox" name="q4answer" value="B"> B. if</label>
+                <label><input type="checkbox" name="q4answer" value="C"> C. switch</label>
+                <label><input type="checkbox" name="q4answer" value="D"> D. while</label>
+            </div>
+        </div>
+
+        <input type="submit" value="提交答案">
+    </form>
+
+    <script>
+        const quizForm = document.getElementById('quizForm');
+        let scores = JSON.parse(localStorage.getItem('scores')) || [];
+
+        quizForm.addEventListener('submit', function (e) {
+            e.preventDefault();
+            
+            // 检查是否所有题目都已作答
+            const answeredAll = checkAllQuestionsAnswered();
+            if (!answeredAll) {
+                alert('请回答所有题目后再提交！');
+                return;
+            }
+
+            let totalScore = 0;
+
+            // 计算单选题得分
+            const q1Answer = document.querySelector('input[name="q1answer"]:checked');
+            if (q1Answer && q1Answer.value === 'B') {
+                totalScore += 20;
+            }
+            
+            const q2Answer = document.querySelector('input[name="q2answer"]:checked');
+            if (q2Answer && q2Answer.value === 'B') {
+                totalScore += 20;
+            }
+
+            // 计算多选题得分
+            const q3Answers = Array.from(document.querySelectorAll('input[name="q3answer"]:checked')).map(option => option.value);
+            const correctQ3Answers = ['A', 'C', 'D'];
+            if (q3Answers.length === correctQ3Answers.length && 
+                q3Answers.every(answer => correctQ3Answers.includes(answer))) {
+                totalScore += 30;
+            }
+            
+            const q4Answers = Array.from(document.querySelectorAll('input[name="q4answer"]:checked')).map(option => option.value);
+            const correctQ4Answers = ['A', 'B', 'D'];
+            if (q4Answers.length === correctQ4Answers.length && 
+                q4Answers.every(answer => correctQ4Answers.includes(answer))) {
+                totalScore += 30;
+            }
+
+            // 保存得分
+            scores.push(totalScore);
+            scores.sort((a, b) => b - a);
+            
+            // 只保留前100名
+            if (scores.length > 100) {
+                scores = scores.slice(0, 100);
+            }
+
+            localStorage.setItem('totalScore', totalScore);
+            localStorage.setItem('scores', JSON.stringify(scores));
+
+            // 跳转到结果页
+            window.location.href = 'result.html';
+        });
+
+        function checkAllQuestionsAnswered() {
+            // 检查单选题
+            const q1Answered = document.querySelector('input[name="q1answer"]:checked');
+            const q2Answered = document.querySelector('input[name="q2answer"]:checked');
+            
+            // 检查多选题(至少选一个)
+            const q3Answered = document.querySelectorAll('input[name="q3answer"]:checked').length > 0;
+            const q4Answered = document.querySelectorAll('input[name="q4answer"]:checked').length > 0;
+            
+            return q1Answered && q2Answered && q3Answered && q4Answered;
+        }
+    </script>
+</body>
+</html>
